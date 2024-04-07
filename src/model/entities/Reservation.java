@@ -41,10 +41,20 @@ public class Reservation {
 
 	}
 
-	public void updateDates(Date checkIn, Date checkOut) {
+	public String updateDates(Date checkIn, Date checkOut) {
 
+		Date now = new Date();
+		if (checkIn.before(now) || checkOut.before(now)) {
+			return "Erro! Data inválida.";
+		}
+
+		else if (!checkOut.after(checkIn)) {
+			return "Erro na reserva, a data de checkOut não é posterior a data de checkIn.";
+		}
 		this.checkIn = checkIn;
 		this.checkOut = checkOut;
+		return null;
+
 	}
 
 	@Override
@@ -52,4 +62,5 @@ public class Reservation {
 		return "Room " + roomNumber + ", " + "check-in: " + sdf.format(checkIn) + ", " + "check-out: "
 				+ sdf.format(checkOut) + ", " + duration() + " nights.";
 	}
+
 }
