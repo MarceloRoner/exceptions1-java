@@ -1,6 +1,7 @@
 package model.entities;
 
 import java.text.SimpleDateFormat;
+import model.exceptions.DomainException;
 import java.util.Date;
 
 import java.util.concurrent.*;
@@ -12,8 +13,11 @@ public class Reservation {
 
 	private static SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
-	public Reservation(Integer roomNumber, Date checkIn, Date checkOut) {
+	public Reservation(Integer roomNumber, Date checkIn, Date checkOut) throws DomainException {
 		super();
+		if (!checkOut.after(checkIn)) {
+			throw new DomainException("Erro na reserva, a data de checkOut não é posterior a data de checkIn.");
+		}
 		this.roomNumber = roomNumber;
 		this.checkIn = checkIn;
 		this.checkOut = checkOut;
@@ -41,19 +45,18 @@ public class Reservation {
 
 	}
 
-	public String updateDates(Date checkIn, Date checkOut) {
+	public void updateDates(Date checkIn, Date checkOut) throws DomainException {
 
 		Date now = new Date();
 		if (checkIn.before(now) || checkOut.before(now)) {
-			return "Erro! Data inválida.";
+			throw new DomainException("Data fornecida inválida.");
 		}
 
 		else if (!checkOut.after(checkIn)) {
-			return "Erro na reserva, a data de checkOut não é posterior a data de checkIn.";
+			throw new DomainException("Erro na reserva, a data de checkOut não é posterior a data de checkIn.");
 		}
 		this.checkIn = checkIn;
 		this.checkOut = checkOut;
-		return null;
 
 	}
 
